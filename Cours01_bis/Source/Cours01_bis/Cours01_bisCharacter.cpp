@@ -44,7 +44,7 @@ void ACours01_bisCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 	GetCharacterMovement()->MaxWalkSpeed *=2;
-	GetCharacterMovement()->JumpZVelocity *=2;
+	//GetCharacterMovement()->JumpZVelocity *=2;
 	
 	UE_LOG(LogTemp, Warning, TEXT("BeginPlay ici"));
 	GEngine->AddOnScreenDebugMessage(-1,5,FColor::Red, TEXT("Hello World"));

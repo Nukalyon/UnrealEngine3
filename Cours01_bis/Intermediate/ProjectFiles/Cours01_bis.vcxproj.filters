@@ -118,5 +118,11 @@
     <ClInclude Include="..\..\Source\Cours01_bis\Private\LasorTrap.h">
       <Filter>Source\Cours01_bis\Private</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\Source\Cours01_bis\Private\Torche.cpp">
+      <Filter>Source\Cours01_bis\Private</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Cours01_bis\Private\Torche.h">
+      <Filter>Source\Cours01_bis\Private</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
