@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Unreal_projects\\Cours01_bis\\Intermediate\\Build\\BuildRulesProjects\\Cours01_bisModuleRules\\Cours01_bisModuleRules.csproj": {}
+    "F:\\Unreal_projects\\UnrealEngine3\\Cours01_bis\\Intermediate\\Build\\BuildRulesProjects\\Cours01_bisModuleRules\\Cours01_bisModuleRules.csproj": {}
   },
   "projects": {
     "C:\\UE_5.4\\Engine\\Intermediate\\Build\\BuildRulesProjects\\MarketplaceRules\\MarketplaceRules.csproj": {
@@ -1098,14 +1098,14 @@
         }
       }
     },
-    "F:\\Unreal_projects\\Cours01_bis\\Intermediate\\Build\\BuildRulesProjects\\Cours01_bisModuleRules\\Cours01_bisModuleRules.csproj": {
+    "F:\\Unreal_projects\\UnrealEngine3\\Cours01_bis\\Intermediate\\Build\\BuildRulesProjects\\Cours01_bisModuleRules\\Cours01_bisModuleRules.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Unreal_projects\\Cours01_bis\\Intermediate\\Build\\BuildRulesProjects\\Cours01_bisModuleRules\\Cours01_bisModuleRules.csproj",
+        "projectUniqueName": "F:\\Unreal_projects\\UnrealEngine3\\Cours01_bis\\Intermediate\\Build\\BuildRulesProjects\\Cours01_bisModuleRules\\Cours01_bisModuleRules.csproj",
         "projectName": "Cours01_bisModuleRules",
-        "projectPath": "F:\\Unreal_projects\\Cours01_bis\\Intermediate\\Build\\BuildRulesProjects\\Cours01_bisModuleRules\\Cours01_bisModuleRules.csproj",
+        "projectPath": "F:\\Unreal_projects\\UnrealEngine3\\Cours01_bis\\Intermediate\\Build\\BuildRulesProjects\\Cours01_bisModuleRules\\Cours01_bisModuleRules.csproj",
         "packagesPath": "C:\\Users\\fruto\\.nuget\\packages\\",
-        "outputPath": "F:\\Unreal_projects\\Cours01_bis\\Intermediate\\Build\\BuildRulesProjects\\Cours01_bisModuleRules\\obj\\",
+        "outputPath": "F:\\Unreal_projects\\UnrealEngine3\\Cours01_bis\\Intermediate\\Build\\BuildRulesProjects\\Cours01_bisModuleRules\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -284,7 +284,6 @@
 /I "Editor\AnimationEditMode\Public"
 /I "F:\Unreal_projects\Cours01_bis\Intermediate\Build\Win64\UnrealEditor\Inc\Cours01_bis\UHT"
 /I "F:\Unreal_projects\Cours01_bis\Source"
-/I "F:\Unreal_projects\Cours01_bis\Source\Cours01_bis\Public"
 /I "..\Plugins\EnhancedInput\Intermediate\Build\Win64\UnrealEditor\Inc\EnhancedInput\UHT"
 /I "..\Plugins\EnhancedInput\Source"
 /I "..\Plugins\EnhancedInput\Source\EnhancedInput\Public"

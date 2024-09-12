@@ -1,14 +1,14 @@
 {
     "Version": "1.2",
     "Data": {
-        "Source": "f:\\unreal_projects\\cours01_bis\\source\\cours01_bis\\private\\door.cpp",
+        "Source": "f:\\unreal_projects\\unrealengine3\\cours01_bis\\source\\cours01_bis\\private\\door.cpp",
         "ProvidedModule": "",
-        "PCH": "f:\\unreal_projects\\cours01_bis\\intermediate\\build\\win64\\x64\\cours01_biseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "PCH": "f:\\unreal_projects\\unrealengine3\\cours01_bis\\intermediate\\build\\win64\\x64\\cours01_biseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
         "Includes": [
-            "f:\\unreal_projects\\cours01_bis\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\cours01_bis\\definitions.cours01_bis.h",
-            "f:\\unreal_projects\\cours01_bis\\source\\cours01_bis\\private\\door.h",
-            "f:\\unreal_projects\\cours01_bis\\intermediate\\build\\win64\\unrealeditor\\inc\\cours01_bis\\uht\\door.generated.h",
-            "f:\\unreal_projects\\cours01_bis\\source\\cours01_bis\\cours01_bischaracter.h",
+            "f:\\unreal_projects\\unrealengine3\\cours01_bis\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\cours01_bis\\definitions.cours01_bis.h",
+            "f:\\unreal_projects\\unrealengine3\\cours01_bis\\source\\cours01_bis\\private\\door.h",
+            "f:\\unreal_projects\\unrealengine3\\cours01_bis\\intermediate\\build\\win64\\unrealeditor\\inc\\cours01_bis\\uht\\door.generated.h",
+            "f:\\unreal_projects\\unrealengine3\\cours01_bis\\source\\cours01_bis\\cours01_bischaracter.h",
             "c:\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\gameframework\\character.h",
             "c:\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\gameframework\\charactermovementreplication.h",
             "c:\\ue_5.4\\engine\\source\\runtime\\experimental\\iris\\core\\public\\iris\\serialization\\irisobjectreferencepackagemap.h",
@@ -17,7 +17,7 @@
             "c:\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\gameframework\\rootmotionsource.h",
             "c:\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\rootmotionsource.generated.h",
             "c:\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\character.generated.h",
-            "f:\\unreal_projects\\cours01_bis\\intermediate\\build\\win64\\unrealeditor\\inc\\cours01_bis\\uht\\cours01_bischaracter.generated.h"
+            "f:\\unreal_projects\\unrealengine3\\cours01_bis\\intermediate\\build\\win64\\unrealeditor\\inc\\cours01_bis\\uht\\cours01_bischaracter.generated.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []
