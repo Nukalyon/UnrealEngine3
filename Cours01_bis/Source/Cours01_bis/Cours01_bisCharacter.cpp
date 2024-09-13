@@ -36,7 +36,7 @@ ACours01_bisCharacter::ACours01_bisCharacter()
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
-	UE_LOG(LogTemp, Warning, TEXT("Constructor ici"));
+	//UE_LOG(LogTemp, Warning, TEXT("Constructor ici"));
 }
 
 void ACours01_bisCharacter::BeginPlay()
@@ -46,7 +46,7 @@ void ACours01_bisCharacter::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed *=2;
 	//GetCharacterMovement()->JumpZVelocity *=2;
 	
-	UE_LOG(LogTemp, Warning, TEXT("BeginPlay ici"));
+	//UE_LOG(LogTemp, Warning, TEXT("BeginPlay ici"));
 	GEngine->AddOnScreenDebugMessage(-1,5,FColor::Red, TEXT("Hello World"));
 }
 
