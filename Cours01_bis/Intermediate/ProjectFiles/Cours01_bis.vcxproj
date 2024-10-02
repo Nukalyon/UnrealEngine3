@@ -67,7 +67,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FF510DAF-3E01-304F-AF46-36007FF25D23}</ProjectGuid>
+    <ProjectGuid>{AB55FC68-2A41-3A01-A763-E32B060209D6}</ProjectGuid>
     <RootNamespace>Cours01_bis</RootNamespace>
   </PropertyGroup>
   <Import Project="UECommon.props" />
@@ -316,6 +316,10 @@
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClInclude Include="..\..\Source\Cours01_bis\Private\PuzzleManager.h"/>
+    <ClCompile Include="..\..\Source\Cours01_bis\Private\Slot_Machine.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Cours01_bis\Private\Slot_Machine.h"/>
     <ClCompile Include="..\..\Source\Cours01_bis\Private\Torche.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
