@@ -88,3 +88,4 @@ Session.vim
 !/Content/**/*.uasset
 !/Content/**/*.umap
 !/RawContent/**/*
+!/Cours01_bis
