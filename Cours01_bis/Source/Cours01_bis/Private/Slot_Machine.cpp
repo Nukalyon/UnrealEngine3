@@ -125,7 +125,7 @@ void ASlot_Machine::isWinner()
 {
 	//Compare valeur de la bobine gauche 0 à celle du centre 1
 	//Bobine droite 2 ignorée
-	if(true)
+	if(indexes[0] == indexes[1])
 	{
 		Speaker->Play();
 		ChangeMaterial(mat_win);
