@@ -67,6 +67,15 @@ void AInspectModeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AInspectModeCharacter::Look);
+		
+		// EnterInspect
+		EnhancedInputComponent->BindAction(EnterInspectAction, ETriggerEvent::Triggered, this, &AInspectModeCharacter::EnterInspect);
+		
+		// ExitInspect
+		EnhancedInputComponent->BindAction(ExitInspectAction, ETriggerEvent::Triggered, this, &AInspectModeCharacter::ExitInspect);
+		
+		// RotateInspect
+		EnhancedInputComponent->BindAction(RotateInspectAction, ETriggerEvent::Triggered, this, &AInspectModeCharacter::RotateInspect);
 	}
 	else
 	{
@@ -82,7 +91,7 @@ void AInspectModeCharacter::Move(const FInputActionValue& Value)
 
 	if (Controller != nullptr)
 	{
-		PlayerWidget->SetPromptF(false);
+		//PlayerWidget->SetPromptF(false);
 		// add movement 
 		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
 		AddMovementInput(GetActorRightVector(), MovementVector.X);
@@ -100,4 +109,32 @@ void AInspectModeCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AInspectModeCharacter::EnterInspect()
+{
+	GEngine ->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Entering InspectMode");
+
+	auto PlayerController = Cast<APlayerController>(GetController());
+	auto inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+	inputSubsystem->RemoveMappingContext(DefaultMappingContext);
+	inputSubsystem->AddMappingContext(InspectMappingContext, 0);
+
+	
+}
+
+void AInspectModeCharacter::ExitInspect()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, "Exiting InspectMode");
+	
+	
+	auto PlayerController = Cast<APlayerController>(GetController());
+	auto inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+	inputSubsystem->RemoveMappingContext(InspectMappingContext);
+	inputSubsystem->AddMappingContext(DefaultMappingContext, 0);
+}
+
+void AInspectModeCharacter::RotateInspect()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Yellow, "Rotating InspectMode");
 }
