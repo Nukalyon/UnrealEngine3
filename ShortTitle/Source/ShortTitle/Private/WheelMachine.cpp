@@ -3,6 +3,8 @@
 
 #include "WheelMachine.h"
 
+#include "Algo/RandomShuffle.h"
+
 // Sets default values
 AWheelMachine::AWheelMachine()
 {
@@ -59,5 +61,13 @@ void AWheelMachine::BeginPlay()
 void AWheelMachine::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AWheelMachine::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp,
+	bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+{
+	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+	rotateTime = FMath::RandRange(1,2);
+	//Tourner la roue en fonction de rotateTime
 }
 
