@@ -3,8 +3,6 @@
 
 #include "PlatformToggle.h"
 
-#include "GameFramework/EngineMessage.h"
-
 // Sets default values
 APlatformToggle::APlatformToggle()
 {

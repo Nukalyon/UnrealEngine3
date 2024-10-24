@@ -3,17 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/Actor.h"
-#include "PlatformToggle.generated.h"
+#include "FireTorch.generated.h"
+
+// Pour que le header sache que c'est valide ? ref:
+// https://dev.epicgames.com/community/learning/tutorials/Gx5j/using-niagara-in-c
+class UNiagaraComponent;
 
 UCLASS()
-class APlatformToggle : public AActor
+class AFireTorch : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APlatformToggle();
+	AFireTorch();
 
 protected:
 	// Called when the game starts or when spawned
@@ -22,21 +28,13 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	void ChangeMaterial(UMaterialInterface* Material, int index);
 	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
 
 private:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* Root;
 	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* Cylinder;
-
-	
-	UPROPERTY(EditAnywhere, Category="Material")
-	UMaterialInterface* greenMat;
-	UPROPERTY(EditAnywhere, Category="Material")
-	UMaterialInterface* redMat;
-
-	UPROPERTY(EditAnywhere)
-	TArray<AActor*> plateforms;
+	UStaticMeshComponent* Hand;
+	UPROPERTY(EditAnywhere, Category= "Niagara")
+	UNiagaraComponent* Fire;
 };
