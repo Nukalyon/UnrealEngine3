@@ -71,6 +71,7 @@ void ASlot_Machine::BeginPlay()
 	{
 		Speaker->SetAutoActivate(false);
 		Speaker->SetSound(winning);
+		Speaker->VolumeMultiplier = 0.25f;
 	}
 
 	//Enregistrement du NiagaraSystem pour les confettis
@@ -156,7 +157,5 @@ void ASlot_Machine::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimi
 		//Si le son est enregistré, joue le son
 		if(IsValid(spinning))
 			UGameplayStatics::PlaySoundAtLocation(this, spinning, this->GetActorLocation());
-		SpinAllReels();
 	}
 }
-
