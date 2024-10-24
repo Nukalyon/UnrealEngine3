@@ -29,7 +29,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
-
+	
+	
 private:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* Root;
@@ -37,4 +38,7 @@ private:
 	UStaticMeshComponent* Hand;
 	UPROPERTY(EditAnywhere, Category= "Niagara")
 	UNiagaraComponent* Fire;
+
+	UFUNCTION()
+	bool isLit();
 };

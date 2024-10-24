@@ -60,3 +60,8 @@ void AFireTorch::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, cla
 	Fire->SetVisibility(true);
 }
 
+bool AFireTorch::isLit()
+{
+	return Fire->IsActive();
+}
+
