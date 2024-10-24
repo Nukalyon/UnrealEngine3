@@ -27,6 +27,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* Root;
 	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* Cube;
+	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* Roue;
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* BoutonNoir;

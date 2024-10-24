@@ -24,16 +24,26 @@ AWheelMachine::AWheelMachine()
 		Roue->SetWorldScale3D(FVector(1.0f));
 	}
 	Roue -> SetupAttachment(Root);
+	Cube = CreateDefaultSubobject<UStaticMeshComponent>("Cube");
 	BoutonNoir = CreateDefaultSubobject<UStaticMeshComponent>("BoutonNoir");
+	BoutonJaune = CreateDefaultSubobject<UStaticMeshComponent>("BoutonJaune");
 	// https://forums.unrealengine.com/t/how-to-create-a-cylinder-in-c/467194/6
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
-	if (CylinderAsset.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
+	if (CubeAsset.Succeeded())
 	{
-		BoutonNoir->SetStaticMesh(CylinderAsset.Object);
+		BoutonNoir->SetStaticMesh(CubeAsset.Object);
+		BoutonJaune->SetStaticMesh(CubeAsset.Object);
+		Cube->SetStaticMesh(CubeAsset.Object);
+		/*
 		BoutonNoir->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+		BoutonJaune->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 		BoutonNoir->SetWorldScale3D(FVector(1.0f));
+		BoutonJaune->SetWorldScale3D(FVector(1.0f));
+		*/
 	}
-	BoutonNoir -> SetupAttachment(Root);
+	Cube -> SetupAttachment(Root);
+	BoutonNoir -> SetupAttachment(Cube);
+	BoutonJaune -> SetupAttachment(Cube);
 
 }
 
