@@ -8,6 +8,7 @@ AFireTorch::AFireTorch()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
 	
 	// Création de l'élément qui va devenir la racine
 	Root = CreateDefaultSubobject<USceneComponent>("Root");
@@ -56,6 +57,10 @@ void AFireTorch::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, cla
 	bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+	//Collision avec uniquement le joueur
+	//if(Other == UGameplayStatics::GetPlayerPawn(GetWorld(), 0))
+	//{
+	//}
 	Fire->SetActive(true);
 	Fire->SetVisibility(true);
 }

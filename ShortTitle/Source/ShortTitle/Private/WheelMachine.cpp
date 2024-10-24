@@ -27,6 +27,7 @@ AWheelMachine::AWheelMachine()
 	Cube = CreateDefaultSubobject<UStaticMeshComponent>("Cube");
 	BoutonNoir = CreateDefaultSubobject<UStaticMeshComponent>("BoutonNoir");
 	BoutonJaune = CreateDefaultSubobject<UStaticMeshComponent>("BoutonJaune");
+	
 	// https://forums.unrealengine.com/t/how-to-create-a-cylinder-in-c/467194/6
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
 	if (CubeAsset.Succeeded())
@@ -58,6 +59,5 @@ void AWheelMachine::BeginPlay()
 void AWheelMachine::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
