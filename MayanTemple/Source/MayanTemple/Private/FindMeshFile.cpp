@@ -7,6 +7,7 @@
 
 void UFindMeshFile::GetMeshFilesInDirectory(TArray<FString>& OutMeshFileNames)
 {
+	//F:/Unreal_projects/UnrealEngine3/MayanTemple/Content/Temple/Base/MayanTemple_MASTER_Temple_Floor_L_MayanTemple_blocking_v004_blend_Dupli_.uasset
 	FString Directory = FPaths::ProjectContentDir() + TEXT("Temple/Base/");
 	TArray<FString> FileNames;
 

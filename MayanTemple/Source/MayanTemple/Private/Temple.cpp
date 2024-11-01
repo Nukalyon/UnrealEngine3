@@ -16,15 +16,16 @@ ATemple::ATemple()
 	// Create the static mesh component
 	meshTemple = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshTemple"));
 	meshTemple->SetupAttachment(Root); // Attach the mesh component to the root
+	
+	// Example of finding and assigning a mesh
+	FindAndAssignMesh(TEXT("Temple_Floor"), meshTemple);
+
 }
 
 // Called when the game starts or when spawned
 void ATemple::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	// Example of finding and assigning a mesh
-	FindAndAssignMesh(TEXT("Temple_Floor"), meshTemple);
 }
 
 // Called every frame
@@ -42,7 +43,7 @@ void ATemple::FindAndAssignMesh(const FString& MeshName, UStaticMeshComponent* s
 		// Ensure the path is correctly formatted
 		// Remove the .uasset extension if it's included
 		FString extension = TEXT(".uasset");
-		if (FoundMeshPath.EndsWith(TEXT(".uasset")))
+		if (FoundMeshPath.EndsWith(extension))
 		{
 			FoundMeshPath = FoundMeshPath.LeftChop(extension.Len()); // Remove ".uasset"
 		}
