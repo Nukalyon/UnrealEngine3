@@ -1,10 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "FindMeshFile.generated.h"
+
+class UStaticMesh;
 
 UCLASS()
 class MAYANTEMPLE_API UFindMeshFile : public UObject
@@ -12,10 +12,19 @@ class MAYANTEMPLE_API UFindMeshFile : public UObject
 	GENERATED_BODY()
 
 public:
-	// Static method to search for a specific mesh by name in the directory
-	static bool FindMeshByName(const FString& MeshName, FString& OutFoundMeshPath);
+	// Load all static meshes into the manager
+	static void InitializeMeshManager();
+
+	// Get a static mesh by name from the manager
+	static UStaticMesh* GetStaticMeshByName(const FString& MeshName);
+	
+    // Find and assign a mesh to the given static mesh component	
+	static void FindAndAssignMesh(const char* str, UStaticMeshComponent* staticComponent);
 
 private:
-	// Helper method to retrieve mesh files from the directory
+	static TMap<FString, UStaticMesh*> LoadedMeshes;
+
+	// Existing functions
 	static void GetMeshFilesInDirectory(TArray<FString>& OutMeshFileNames);
+	static bool FindMeshByName(const FString& MeshName, FString& OutFoundMeshPath);
 };

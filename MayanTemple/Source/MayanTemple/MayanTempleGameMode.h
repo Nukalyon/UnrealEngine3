@@ -13,6 +13,7 @@ class AMayanTempleGameMode : public AGameModeBase
 
 public:
 	AMayanTempleGameMode();
+	virtual void BeginPlay() override;
 };
 
 

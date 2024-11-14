@@ -1,18 +1,15 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "FindMeshFile.h"
 #include "Temple.generated.h"
 
 UCLASS()
-class ATemple : public AActor
+class MAYANTEMPLE_API ATemple : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ATemple();
 
@@ -20,20 +17,22 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	// Function to find and assign the mesh
-	static void FindAndAssignMesh(const FString& MeshName, UStaticMeshComponent* staticComponent);
-
 
 private:
 	// Root component
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere)
 	USceneComponent* Root;
 
-	// Static mesh component
-	UPROPERTY(EditAnywhere, Category = "Components")
-	UStaticMeshComponent* meshTemple;
-	
+	// StaticMesh component
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* floor_room1;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* floor_room2;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* floor_room3;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* floor_room4;
 };
