@@ -31,13 +31,13 @@ void ATemple::BeginPlay()
 
 	// Ensure the mesh manager is initialized before finding and assigning the mesh
 	//UFindMeshFile::InitializeMeshManager();
-	
+	/*
 	// Example of finding and assigning a mesh
 	UFindMeshFile::FindAndAssignMesh("Floor_001", floor_room1);
 	UFindMeshFile::FindAndAssignMesh("Floor_002", floor_room2);
 	UFindMeshFile::FindAndAssignMesh("Floor_003", floor_room3);
 	UFindMeshFile::FindAndAssignMesh("Floor_004", floor_room4);
-
+	*/
 }
 
 // Called every frame

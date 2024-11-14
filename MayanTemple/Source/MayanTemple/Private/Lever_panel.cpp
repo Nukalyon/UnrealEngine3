@@ -26,12 +26,12 @@ ALever_panel::ALever_panel()
 void ALever_panel::BeginPlay()
 {
 	Super::BeginPlay();
-		
+	/*
 	// Example of finding and assigning a mesh
 	UFindMeshFile::FindAndAssignMesh("Panel_R2_R", panel);
 	// Example of finding and assigning a mesh
 	UFindMeshFile::FindAndAssignMesh("Panel_Lever", lever);
-	
+	*/
 }
 
 // Called every frame
@@ -45,7 +45,7 @@ void ALever_panel::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimit
                              bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
 	lever->SetRelativeRotation(FRotator(0, 0, 0));
-	if(doorsRef)
+	if(IsValid(doorsRef))
 	{
 		doorsRef->OpenDoor();
 	}

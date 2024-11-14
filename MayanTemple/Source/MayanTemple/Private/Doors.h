@@ -24,6 +24,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
+	bool isOpening = false;
+	float currentSlidingAmount = 0.0f;
 	// Root component
 	UPROPERTY(EditAnywhere, Category = "Components")
 	USceneComponent* Root;
@@ -38,4 +40,8 @@ private:
 public:
 	UFUNCTION(BlueprintCallable, Category="Door")
 	void OpenDoor();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings Doors")
+	float OpenDistance = 200.0f; // Distance the doors will slide apart
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings Doors")
+	float OpenSpeed = 2.0f; // Speed at which the doors open
 };
