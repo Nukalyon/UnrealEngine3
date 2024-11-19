@@ -1,6 +1,3 @@
-﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-<<<<<<< HEAD
-=======
+<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ASebexid_002Easm_002Fl_003AC_0021_003FUsers_003Ffruto_003FAppData_003FLocal_003FTemp_003FSandboxFiles_003FLicihum_003FSebexid_002Easm/@EntryIndexedValue">ForceIncluded</s:String>
->>>>>>> origin/main
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=DF5E965E_002D84C1_002D3221_002DBEF1_002D08E8746BBBF9_002Fdl_003ASource_003AC_0021_003FUE_005F5_002E4_003FEngine_003FSource_002Fd_003ARuntime_002Fd_003AEngine_002Fd_003AClasses_002Fd_003AGameFramework_002Ff_003AActor_002Eh/@EntryIndexedValue">ForceIncluded</s:String></wpf:ResourceDictionary>
