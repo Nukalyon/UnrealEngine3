@@ -19,5 +19,5 @@ void AMayanTempleGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	// Initialize the mesh manager
-	UFindMeshFile::InitializeMeshManager();
+	//UFindMeshFile::InitializeMeshManager();
 }

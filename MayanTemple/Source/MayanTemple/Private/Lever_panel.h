@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "Lever_panel.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class ALever_panel : public AActor
 {
@@ -24,7 +26,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
-	
+
+	UFUNCTION()
+	void openDoors();
 	// Doors to open
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Components")
 	ADoors* doorsRef;
@@ -36,10 +40,11 @@ private:
 
 	// Static mesh component
 	UPROPERTY(EditAnywhere, Category = "Components")
-	UStaticMeshComponent* panel;
+	UStaticMeshComponent* panel_right;
 	// Static mesh component
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UStaticMeshComponent* lever;
-
-
+	// used for the Linetrace from Player
+	UPROPERTY(EditAnywhere, Category = "Components")
+	UBoxComponent* CollisionBox;
 };

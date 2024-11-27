@@ -2,7 +2,7 @@
 
 
 #include "Lever_panel.h"
-#include "FindMeshFile.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 ALever_panel::ALever_panel()
@@ -15,30 +15,29 @@ ALever_panel::ALever_panel()
 	RootComponent = Root; // Set the root component of the actor
 
 	// Create the static mesh component
-	panel = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Panel"));
-	panel->SetupAttachment(Root); // Attach the mesh component to the root
+	panel_right = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Panel"));
+	panel_right->SetupAttachment(Root); // Attach the mesh component to the root
 	// Create the static mesh component
 	lever = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Lever"));
-	lever->SetupAttachment(panel); // Attach the mesh component to the panel
+	lever->SetupAttachment(panel_right); // Attach the mesh component to the panel
+
+	//Attach a collision box to the lever
+	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
+	CollisionBox->SetupAttachment(lever);
+	CollisionBox->SetCollisionProfileName(TEXT("Trigger")); // Set appropriate collision profile
+
 }
 
 // Called when the game starts or when spawned
 void ALever_panel::BeginPlay()
 {
 	Super::BeginPlay();
-	/*
-	// Example of finding and assigning a mesh
-	UFindMeshFile::FindAndAssignMesh("Panel_R2_R", panel);
-	// Example of finding and assigning a mesh
-	UFindMeshFile::FindAndAssignMesh("Panel_Lever", lever);
-	*/
 }
 
 // Called every frame
 void ALever_panel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ALever_panel::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp,
@@ -50,5 +49,14 @@ void ALever_panel::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimit
 		doorsRef->OpenDoor();
 	}
 	//Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+}
+
+void ALever_panel::openDoors()
+{
+	lever->SetRelativeRotation(FRotator(0, 0, 0));
+	if(IsValid(doorsRef))
+	{
+		doorsRef->OpenDoor();
+	}
 }
 

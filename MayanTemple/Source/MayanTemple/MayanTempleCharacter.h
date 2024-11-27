@@ -12,9 +12,12 @@ class USkeletalMeshComponent;
 class UCameraComponent;
 class UInputAction;
 class UInputMappingContext;
+//Ajout de l'ui
+class UPlayerWidget;
+class APreciousRock;
 struct FInputActionValue;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
+//DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
 class AMayanTempleCharacter : public ACharacter
@@ -29,6 +32,10 @@ class AMayanTempleCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
 
+	/** Item offset */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	USceneComponent* InspectOrigin;
+
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* JumpAction;
@@ -36,18 +43,41 @@ class AMayanTempleCharacter : public ACharacter
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
+
+	/** Enter Inspect Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* EnterInspectAction;
+
+	/** Exit Inspect Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* ExitInspectAction;
+
+	/** Rotate Inspect Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* RotateInspectAction;
+	
+	/*********************
+	 *	Context Mapping
+	 ********************/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputMappingContext* DefaultMappingContext;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputMappingContext* InspectMappingContext;
+
 	
 public:
 	AMayanTempleCharacter();
 
 protected:
 	virtual void BeginPlay();
+	virtual void Tick(float DeltaSeconds) override;
 
 public:
 		
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* LookAction;
+	UInputAction* LookAction;
 
 protected:
 	/** Called for movement input */
@@ -55,6 +85,15 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+	
+	/** Called for entering inspect input */
+	void EnterInspect(const FInputActionValue& InputActionValue);
+	
+	/** Called for exiting inspect input */
+	void ExitInspect(const FInputActionValue& InputActionValue);
+	
+	/** Called for rotating inspect input */
+	void RotateInspect(const FInputActionValue& InputActionValue);
 
 protected:
 	// APawn interface
@@ -66,6 +105,18 @@ public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+private:
+	UPlayerWidget* PlayerWidget;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> PlayerWidgetClass;
+
+	bool isInspecting;
+	bool isOverLever;
+	bool isOverRock;
+	AActor* CurrentInspectActor;
+	FTransform InitialInspectTransform;
 
 };
 
