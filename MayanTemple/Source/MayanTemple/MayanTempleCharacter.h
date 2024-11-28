@@ -56,6 +56,10 @@ class AMayanTempleCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* RotateInspectAction;
 	
+	/** Interact Actor Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* InteractWithActorAction;
+	
 	/*********************
 	 *	Context Mapping
 	 ********************/
@@ -82,18 +86,18 @@ public:
 protected:
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
-
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 	
 	/** Called for entering inspect input */
 	void EnterInspect(const FInputActionValue& InputActionValue);
-	
 	/** Called for exiting inspect input */
 	void ExitInspect(const FInputActionValue& InputActionValue);
-	
 	/** Called for rotating inspect input */
 	void RotateInspect(const FInputActionValue& InputActionValue);
+	
+	/** Called for interacting with actor input */
+	void InteractWithActor(const FInputActionValue& InputActionValue);
 
 protected:
 	// APawn interface

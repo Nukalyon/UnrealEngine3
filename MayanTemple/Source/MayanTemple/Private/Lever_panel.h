@@ -25,10 +25,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	virtual void NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
+	//virtual void NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
 
 	UFUNCTION()
 	void openDoors();
+	UFUNCTION()
+	bool GetIsUsed() const;
 	// Doors to open
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Components")
 	ADoors* doorsRef;
@@ -45,6 +47,12 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UStaticMeshComponent* lever;
 	// used for the Linetrace from Player
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(EditAnywhere, Category = "Collider")
 	UBoxComponent* CollisionBox;
+
+
+	bool startlifting = false;
+	bool isUsed = false;
+	int maxIncrement = 135;
+	int currentIncrement = 0;
 };

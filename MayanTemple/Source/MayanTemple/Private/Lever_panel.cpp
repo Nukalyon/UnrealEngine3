@@ -38,25 +38,35 @@ void ALever_panel::BeginPlay()
 void ALever_panel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-}
-
-void ALever_panel::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp,
-                             bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
-{
-	lever->SetRelativeRotation(FRotator(0, 0, 0));
-	if(IsValid(doorsRef))
+	if(startlifting && !isUsed)
 	{
-		doorsRef->OpenDoor();
+		FRotator currentLeverRotation = lever->GetRelativeRotation();
+		if(currentIncrement <= maxIncrement)
+		{
+			currentLeverRotation.Yaw += 1;
+			currentIncrement++;
+			lever->SetRelativeRotation(currentLeverRotation);
+		}
+		else
+		{
+			startlifting = false;
+			isUsed = true;
+		}
 	}
-	//Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 }
 
 void ALever_panel::openDoors()
 {
-	lever->SetRelativeRotation(FRotator(0, 0, 0));
+	//lever->SetRelativeRotation(FRotator(0, 0, 0));
 	if(IsValid(doorsRef))
 	{
+		startlifting = true;
 		doorsRef->OpenDoor();
 	}
+}
+
+bool ALever_panel::GetIsUsed() const
+{
+	return this->isUsed;
 }
 

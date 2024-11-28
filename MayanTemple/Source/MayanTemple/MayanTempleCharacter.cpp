@@ -89,7 +89,8 @@ void AMayanTempleCharacter::Tick(float DeltaSeconds)
 			{
 				isOverLever = true;
 				isOverRock = false;
-				PlayerWidget->setPromptF(true);
+				PlayerWidget->setPromptF(false);
+				PlayerWidget->setPromptR(true);
 				CurrentInspectActor = HitLever;
 			}
 			else if (HitRock)
@@ -97,13 +98,14 @@ void AMayanTempleCharacter::Tick(float DeltaSeconds)
 				isOverRock = true;
 				isOverLever = false;
 				PlayerWidget->setPromptF(true);
+				PlayerWidget->setPromptR(false);
 				CurrentInspectActor = HitRock;
 			}
 			else
 			{
 				isOverRock = false;
 				isOverLever = false;
-				PlayerWidget->setPromptF(false);
+				PlayerWidget->togglePrompts(false);
 				CurrentInspectActor = nullptr;
 			}
 		}
@@ -111,7 +113,7 @@ void AMayanTempleCharacter::Tick(float DeltaSeconds)
 		{
 			isOverRock = false;
 			isOverLever = false;
-			PlayerWidget->setPromptF(false);
+			PlayerWidget->togglePrompts(false);
 			CurrentInspectActor = nullptr;
 		}
 	}
@@ -127,21 +129,20 @@ void AMayanTempleCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 		// Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMayanTempleCharacter::Move);
-
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMayanTempleCharacter::Look);
 
 		//Enter Inspect
 		EnhancedInputComponent->BindAction(EnterInspectAction, ETriggerEvent::Triggered, this, &AMayanTempleCharacter::EnterInspect);
-
-		//Enter Inspect
+		//Exit Inspect
 		EnhancedInputComponent->BindAction(ExitInspectAction, ETriggerEvent::Triggered, this, &AMayanTempleCharacter::ExitInspect);
-
-		//Enter Inspect
+		//Rotate Inspect
 		EnhancedInputComponent->BindAction(RotateInspectAction, ETriggerEvent::Triggered, this, &AMayanTempleCharacter::RotateInspect);
+		
+		//Interact with Actor
+		EnhancedInputComponent->BindAction(InteractWithActorAction, ETriggerEvent::Triggered, this, &AMayanTempleCharacter::InteractWithActor);
 	}
 	else
 	{
@@ -181,19 +182,14 @@ void AMayanTempleCharacter::EnterInspect(const FInputActionValue& InputActionVal
 	if (!isInspecting && IsValid(CurrentInspectActor))
 	{
 		isInspecting = true;
-		PlayerWidget->setPromptF(false);
-		if(CurrentInspectActor->IsA<ALever_panel>())
-		{
-			ALever_panel* temp = Cast<ALever_panel>(CurrentInspectActor);
-			temp->openDoors();
-			isInspecting = false;
-		}
-		else
-		{
+		PlayerWidget->togglePrompts(false);
+		// if the player is look at a rock
+		if(CurrentInspectActor->IsA<APreciousRock>()){
 			InspectOrigin->SetRelativeRotation(FRotator::ZeroRotator);
 			InitialInspectTransform = CurrentInspectActor->GetActorTransform();
 			CurrentInspectActor->AttachToComponent(InspectOrigin, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 
+			//Mapping changement
 			auto PlayerController = Cast<APlayerController>(GetController());
 			auto inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
 				PlayerController->GetLocalPlayer());
@@ -223,4 +219,21 @@ void AMayanTempleCharacter::ExitInspect(const FInputActionValue& InputActionValu
 
 void AMayanTempleCharacter::RotateInspect(const FInputActionValue& InputActionValue)
 {
+}
+
+void AMayanTempleCharacter::InteractWithActor(const FInputActionValue& InputActionValue)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Interact With Actor"));
+	if(!isInspecting && IsValid(CurrentInspectActor))
+	{
+		if(CurrentInspectActor->IsA<ALever_panel>())
+		{
+			ALever_panel* temp = Cast<ALever_panel>(CurrentInspectActor);
+			if(!temp->GetIsUsed())
+			{
+				temp->openDoors();
+			}
+			isInspecting = false;
+		}
+	}
 }

@@ -22,5 +22,26 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+private:
+	
+	UPROPERTY(EditAnywhere, Category = "Components")
+	USceneComponent* Root;
+
+	// Static mesh component
+	UPROPERTY(EditAnywhere, Category = "Components")
+	UStaticMeshComponent* Altar;
+	// Static mesh component
+	UPROPERTY(EditAnywhere, Category = "Components")
+	UStaticMeshComponent* GoldPlace;
+	// Static mesh component
+	UPROPERTY(EditAnywhere, Category = "Components")
+	UStaticMeshComponent* JadePlace;
+	// Static mesh component
+	UPROPERTY(EditAnywhere, Category = "Components")
+	UStaticMeshComponent* ObsidianPlace;
+	// Static mesh component
+	UPROPERTY(EditAnywhere, Category = "Components")
+	UStaticMeshComponent* TurquoisePlace;
 
 };

@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Doors.generated.h"
 
+class USphereComponent;
+
 UCLASS()
 class ADoors : public AActor
 {
@@ -22,9 +24,14 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	//When the player is near after having opened the door once
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
+	
 private:
 	bool isOpening = false;
+	bool isClosing = false;
+	bool isOpenedAtLeastOnce = false;
 	float currentSlidingAmount = 0.0f;
 	// Root component
 	UPROPERTY(EditAnywhere, Category = "Components")
@@ -36,10 +43,13 @@ private:
 	// Static mesh component
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UStaticMeshComponent* porteDroite;
+	UPROPERTY(EditAnywhere, Category = "Collider")
+	USphereComponent* CollisionBox;
 
 public:
 	UFUNCTION(BlueprintCallable, Category="Door")
 	void OpenDoor();
+	void CloseDoors();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings Doors")
 	float OpenDistance = 200.0f; // Distance the doors will slide apart
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings Doors")

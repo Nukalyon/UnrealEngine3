@@ -33,6 +33,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UStaticMeshComponent* Rock;
 	// used for the Linetrace from Player
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(EditAnywhere, Category = "Collider")
 	UBoxComponent* CollisionBox;
 };
