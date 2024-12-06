@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MayanTempleCharacter.h"
+
+#include "Autel.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -32,7 +34,10 @@ AMayanTempleCharacter::AMayanTempleCharacter()
 
 	InspectOrigin = CreateDefaultSubobject<USceneComponent>(TEXT("InspectOrigin"));
 	InspectOrigin->SetupAttachment(FirstPersonCameraComponent);
-	InspectOrigin->SetRelativeLocation(FVector(40.f, 0.f, 0.f)); // Position the camera
+	InspectOrigin->SetRelativeLocation(FVector(40.f, 0.f, 0.f));
+	
+	HoldOrigin = CreateDefaultSubobject<USceneComponent>(TEXT("Holdrigin"));
+	HoldOrigin->SetupAttachment(FirstPersonCameraComponent);
 
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
@@ -50,9 +55,6 @@ void AMayanTempleCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 	
-	isInspecting = false;
-	isOverLever = false;
-	isOverRock = false;
 	if(PlayerWidgetClass)
 	{
 		auto userWidget =  CreateWidget<UUserWidget>(GetWorld(), PlayerWidgetClass);
@@ -60,7 +62,7 @@ void AMayanTempleCharacter::BeginPlay()
 		if(PlayerWidget)
 		{
 			PlayerWidget->AddToViewport();
-			PlayerWidget->setPromptF(false);
+			PlayerWidget->togglePrompts(false);
 		}
 	}
 }
@@ -68,11 +70,11 @@ void AMayanTempleCharacter::BeginPlay()
 void AMayanTempleCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if (!isInspecting)
+	if ((!isInspecting && !isHolding) || isAbleToPlaceItem)
 	{
 		FHitResult HitResult;
 		FVector Start = FirstPersonCameraComponent->GetComponentLocation();
-		FVector End = Start + FirstPersonCameraComponent->GetForwardVector() * 2000.f;
+		FVector End = Start + FirstPersonCameraComponent->GetForwardVector() * 500.f;
 		FCollisionObjectQueryParams QueryParams;
 		QueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
 	
@@ -84,22 +86,31 @@ void AMayanTempleCharacter::Tick(float DeltaSeconds)
 		{
 			ALever_panel* HitLever = Cast<ALever_panel>(HitResult.GetActor());
 			APreciousRock* HitRock = Cast<APreciousRock>(HitResult.GetActor());
+			AAutel* HitAutel = Cast<AAutel>(HitResult.GetActor());
 
-			if (HitLever)
+			if (HitLever && !isAbleToPlaceItem)
 			{
+				//UE_LOG(LogTemp, Warning, TEXT("HitLever"));
 				isOverLever = true;
 				isOverRock = false;
 				PlayerWidget->setPromptF(false);
 				PlayerWidget->setPromptR(true);
 				CurrentInspectActor = HitLever;
 			}
-			else if (HitRock)
+			else if (HitRock && !isAbleToPlaceItem)
 			{
+				//UE_LOG(LogTemp, Warning, TEXT("HitRock"));
 				isOverRock = true;
 				isOverLever = false;
-				PlayerWidget->setPromptF(true);
-				PlayerWidget->setPromptR(false);
+				PlayerWidget->togglePrompts(true);
 				CurrentInspectActor = HitRock;
+			}
+			else if(HitAutel && isAbleToPlaceItem)
+			{
+				//UE_LOG(LogTemp, Warning, TEXT("HitAutel"));
+				PlayerWidget->setPromptF(false);
+				PlayerWidget->setPromptR(true);
+				CurrentInspectActor = HitAutel;
 			}
 			else
 			{
@@ -142,7 +153,9 @@ void AMayanTempleCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 		EnhancedInputComponent->BindAction(RotateInspectAction, ETriggerEvent::Triggered, this, &AMayanTempleCharacter::RotateInspect);
 		
 		//Interact with Actor
-		EnhancedInputComponent->BindAction(InteractWithActorAction, ETriggerEvent::Triggered, this, &AMayanTempleCharacter::InteractWithActor);
+		EnhancedInputComponent->BindAction(EnterHoldActorAction, ETriggerEvent::Triggered, this, &AMayanTempleCharacter::EnterHoldActor);
+		//Interact with Actor
+		EnhancedInputComponent->BindAction(ExitHoldActorAction, ETriggerEvent::Triggered, this, &AMayanTempleCharacter::ExitHoldActor);
 	}
 	else
 	{
@@ -185,6 +198,8 @@ void AMayanTempleCharacter::EnterInspect(const FInputActionValue& InputActionVal
 		PlayerWidget->togglePrompts(false);
 		// if the player is look at a rock
 		if(CurrentInspectActor->IsA<APreciousRock>()){
+			//UE_LOG(LogTemp, Warning, TEXT("Object is APreciousRock"));
+			Cast<APreciousRock>(CurrentInspectActor)->TogglePhysics(false);
 			InspectOrigin->SetRelativeRotation(FRotator::ZeroRotator);
 			InitialInspectTransform = CurrentInspectActor->GetActorTransform();
 			CurrentInspectActor->AttachToComponent(InspectOrigin, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
@@ -204,8 +219,8 @@ void AMayanTempleCharacter::ExitInspect(const FInputActionValue& InputActionValu
 	if (isInspecting)
 	{
 		isInspecting = false;
+		Cast<APreciousRock>(CurrentInspectActor)->TogglePhysics(true);
 		CurrentInspectActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-		CurrentInspectActor->SetActorTransform(InitialInspectTransform);
 		CurrentInspectActor = nullptr;
 
 		//https://forums.unrealengine.com/t/get-enhanced-input-local-player-subsystem-in-c/1732524/2
@@ -219,13 +234,31 @@ void AMayanTempleCharacter::ExitInspect(const FInputActionValue& InputActionValu
 
 void AMayanTempleCharacter::RotateInspect(const FInputActionValue& InputActionValue)
 {
+	// Check if we are currently inspecting an object
+	if (isInspecting)
+	{
+		// Get the mouse movement input
+		FVector2D MouseDelta = InputActionValue.Get<FVector2D>();
+
+		// Sensitivity factor for rotation
+		const float Sensitivity = 1.0f;
+
+		// Calculate the rotation based on mouse movement
+		FRotator NewRotation = CurrentInspectActor->GetActorRotation();
+		NewRotation.Yaw += MouseDelta.X * Sensitivity;
+		NewRotation.Pitch -= MouseDelta.Y * Sensitivity;
+
+		// Apply the new rotation to the object
+		CurrentInspectActor->SetActorRotation(NewRotation);
+	}
 }
 
-void AMayanTempleCharacter::InteractWithActor(const FInputActionValue& InputActionValue)
+void AMayanTempleCharacter::EnterHoldActor(const FInputActionValue& InputActionValue)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Interact With Actor"));
-	if(!isInspecting && IsValid(CurrentInspectActor))
+	PlayerWidget->togglePrompts(false);
+	if(!isHolding && IsValid(CurrentInspectActor))
 	{
+		//Utilisation du levier
 		if(CurrentInspectActor->IsA<ALever_panel>())
 		{
 			ALever_panel* temp = Cast<ALever_panel>(CurrentInspectActor);
@@ -233,7 +266,60 @@ void AMayanTempleCharacter::InteractWithActor(const FInputActionValue& InputActi
 			{
 				temp->openDoors();
 			}
-			isInspecting = false;
+		}
+		// Utilisation des pierres
+		else if(CurrentInspectActor->IsA<APreciousRock>())
+		{
+			isHolding = true;
+			isAbleToPlaceItem = true;
+			CurrentHoldActor = CurrentInspectActor;
+			
+			APreciousRock* rock = Cast<APreciousRock>(CurrentInspectActor);
+			rock->TogglePhysics(false);
+			HoldOrigin->SetRelativeRotation(FRotator::ZeroRotator);
+			CurrentInspectActor->AttachToComponent(HoldOrigin, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+			
+			auto PlayerController = Cast<APlayerController>(GetController());
+			auto inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
+				PlayerController->GetLocalPlayer());
+			inputSubsystem->RemoveMappingContext(DefaultMappingContext);
+			inputSubsystem->AddMappingContext(HoldActorMappingContext, 0);
 		}
 	}
+}
+
+void AMayanTempleCharacter::ExitHoldActor(const FInputActionValue& InputActionValue)
+{
+	if(isHolding)
+	{
+		if(CurrentInspectActor->IsA<APreciousRock>())
+		{
+			isHolding = false;
+			isAbleToPlaceItem = false;
+			APreciousRock* rock = Cast<APreciousRock>(CurrentInspectActor);
+			rock->TogglePhysics(true);
+			CurrentInspectActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+			CurrentInspectActor = nullptr;
+			CurrentHoldActor = nullptr;
+		}
+		else if(CurrentInspectActor->IsA(AAutel::StaticClass()) && CurrentHoldActor->IsA<APreciousRock>())
+		{
+			isHolding = false;
+			isAbleToPlaceItem = false;
+			// on détache le currentholdactor, on le fixe dans l'autel à sa position
+			AAutel* autel = Cast<AAutel>(CurrentInspectActor);
+			APreciousRock* rock = Cast<APreciousRock>(CurrentHoldActor);
+			autel->SnapThatRock(rock);
+			CurrentHoldActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+			CurrentHoldActor = nullptr;
+		}
+	}
+	
+
+	auto PlayerController = Cast<APlayerController>(GetController());
+	auto inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
+		PlayerController->GetLocalPlayer());
+	inputSubsystem->RemoveMappingContext(HoldActorMappingContext);
+	inputSubsystem->AddMappingContext(DefaultMappingContext, 0);	
 }

@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
+#include "PreciousRock.h"
 #include "Autel.generated.h"
 
 UCLASS()
@@ -23,8 +26,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
-private:
-	
+private:	
 	UPROPERTY(EditAnywhere, Category = "Components")
 	USceneComponent* Root;
 
@@ -44,4 +46,16 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UStaticMeshComponent* TurquoisePlace;
 
+	
+	UPROPERTY(EditAnywhere, Category = "Niagara")
+	UNiagaraComponent* NS_Rocks;
+
+	UPROPERTY(EditAnywhere, Category = "Rocks")
+	TArray<APreciousRock*> Rocks;
+
+public:
+	UFUNCTION()
+	void ActivateNiagara(APreciousRock* rock);
+	UFUNCTION()
+	void SnapThatRock(APreciousRock* rock);
 };

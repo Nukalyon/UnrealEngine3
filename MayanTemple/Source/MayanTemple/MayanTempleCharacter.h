@@ -12,9 +12,9 @@ class USkeletalMeshComponent;
 class UCameraComponent;
 class UInputAction;
 class UInputMappingContext;
+class APreciousRock;
 //Ajout de l'ui
 class UPlayerWidget;
-class APreciousRock;
 struct FInputActionValue;
 
 //DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -35,6 +35,10 @@ class AMayanTempleCharacter : public ACharacter
 	/** Item offset */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USceneComponent* InspectOrigin;
+
+	/** Item offset */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	USceneComponent* HoldOrigin;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
@@ -58,7 +62,10 @@ class AMayanTempleCharacter : public ACharacter
 	
 	/** Interact Actor Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	UInputAction* InteractWithActorAction;
+	UInputAction* EnterHoldActorAction;
+	/** Interact Actor Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* ExitHoldActorAction;
 	
 	/*********************
 	 *	Context Mapping
@@ -68,6 +75,9 @@ class AMayanTempleCharacter : public ACharacter
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputMappingContext* InspectMappingContext;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputMappingContext* HoldActorMappingContext;
 
 	
 public:
@@ -78,7 +88,6 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 public:
-		
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
@@ -97,7 +106,9 @@ protected:
 	void RotateInspect(const FInputActionValue& InputActionValue);
 	
 	/** Called for interacting with actor input */
-	void InteractWithActor(const FInputActionValue& InputActionValue);
+	void EnterHoldActor(const FInputActionValue& InputActionValue);
+	/** Called for interacting with actor input */
+	void ExitHoldActor(const FInputActionValue& InputActionValue);
 
 protected:
 	// APawn interface
@@ -116,11 +127,13 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UUserWidget> PlayerWidgetClass;
 
-	bool isInspecting;
-	bool isOverLever;
-	bool isOverRock;
+	bool isInspecting = false;
+	bool isHolding = false;
+	bool isAbleToPlaceItem = false;
+	bool isOverLever = false;
+	bool isOverRock = false;
 	AActor* CurrentInspectActor;
+	AActor* CurrentHoldActor;
 	FTransform InitialInspectTransform;
-
 };
 

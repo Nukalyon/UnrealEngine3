@@ -51,7 +51,7 @@ public:
 	void OpenDoor();
 	void CloseDoors();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings Doors")
-	float OpenDistance = 200.0f; // Distance the doors will slide apart
+	float OpenDistance = 1.5f; // Distance the doors will slide apart
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings Doors")
-	float OpenSpeed = 2.0f; // Speed at which the doors open
+	float OpenSpeed = 0.75f; // Speed at which the doors open
 };

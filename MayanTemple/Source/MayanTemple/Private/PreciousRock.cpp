@@ -3,7 +3,7 @@
 
 #include "PreciousRock.h"
 
-#include "Components/BoxComponent.h"
+#include "Autel.h"
 
 // Sets default values
 APreciousRock::APreciousRock()
@@ -12,30 +12,39 @@ APreciousRock::APreciousRock()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Create the root component
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-	RootComponent = Root; // Set the root component of the actor
+	//Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	//RootComponent = Root; // Set the root component of the actor
 
 	// Create the static mesh component
 	Rock = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Rock"));
-	Rock->SetupAttachment(Root);
+	TogglePhysics(true);
+	//Rock->SetupAttachment(Root);
+	RootComponent = Rock;
 
-	//Attach a collision box to the lever
-	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
-	CollisionBox->SetupAttachment(Rock);
-	CollisionBox->SetCollisionProfileName(TEXT("Trigger")); // Set appropriate collision profile
+	RockOptions.Add(TEXT("Gold"));
+	RockOptions.Add(TEXT("Jade"));
+	RockOptions.Add(TEXT("Obsidian"));
+	RockOptions.Add(TEXT("Turquoise"));
+
 }
 
 // Called when the game starts or when spawned
 void APreciousRock::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	RockName = RockOptions[RockNameIndex];
 }
 
 // Called every frame
 void APreciousRock::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-
+	Super::Tick(DeltaTime);	
 }
 
+void APreciousRock::TogglePhysics(bool isEnabled)
+{
+	//UE_LOG(LogTemp, Warning, TEXT("Physics toggled to %s"), isEnabled ? TEXT("true") : TEXT("false"));
+	Rock->SetSimulatePhysics(isEnabled);
+	Rock->SetEnableGravity(isEnabled);
+	Rock->SetCollisionEnabled(isEnabled ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
+}

@@ -51,7 +51,6 @@ void ADoors::Tick(float DeltaTime)
 		{
 			currentSlidingAmount = OpenDistance;
 			isOpening = false; // Stop opening when we reach the target distance
-			isOpenedAtLeastOnce = true;
 		}
 
 		// Update the position of the doors
@@ -72,7 +71,7 @@ void ADoors::Tick(float DeltaTime)
 		if (currentSlidingAmount <= 0)
 		{
 			currentSlidingAmount = 0;
-			isOpening = false; // Stop opening when we reach the target distance
+			isClosing = false; // Stop opening when we reach the target distance
 		}
 
 		// Update the position of the doors
@@ -88,7 +87,9 @@ void ADoors::Tick(float DeltaTime)
 
 void ADoors::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Notify Actor Begin Overlap"));
+	//UE_LOG(LogTemp, Warning, TEXT("------------\nNotify Actor Begin Overlap"));
+	//UE_LOG(LogTemp, Warning, TEXT("isOpenedAtLeastOnce %s"), isOpenedAtLeastOnce ? TEXT("true") : TEXT("false"));
+	//UE_LOG(LogTemp, Warning, TEXT("isOpening %s"), isOpening ? TEXT("true") : TEXT("false"));
 	if(isOpenedAtLeastOnce && !isOpening)
 	{
 		OpenDoor();
@@ -98,7 +99,9 @@ void ADoors::NotifyActorBeginOverlap(AActor* OtherActor)
 
 void ADoors::NotifyActorEndOverlap(AActor* OtherActor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Notify Actor End Overlap"));
+	//UE_LOG(LogTemp, Warning, TEXT("------------\nNotify Actor End Overlap"));
+	//UE_LOG(LogTemp, Warning, TEXT("isOpenedAtLeastOnce %s"), isOpenedAtLeastOnce ? TEXT("true") : TEXT("false"));
+	//UE_LOG(LogTemp, Warning, TEXT("isOpening %s"), isOpening ? TEXT("true") : TEXT("false"));
 	if(isOpenedAtLeastOnce && !isClosing)
 	{
 		CloseDoors();
@@ -110,14 +113,15 @@ void ADoors::OpenDoor()
 	//Logic to open the doors
 	isOpening = true;
 	isClosing = false;
-	UE_LOG(LogTemp, Log, TEXT("Enter OpenDoor()"));
+	isOpenedAtLeastOnce = true;
+	//UE_LOG(LogTemp, Log, TEXT("Enter OpenDoor()"));
 }
 
 void ADoors::CloseDoors()
 {
 	isOpening = false;
 	isClosing = true;
-	UE_LOG(LogTemp, Log, TEXT("Enter CloseDoors()"));	
+	//UE_LOG(LogTemp, Log, TEXT("Enter CloseDoors()"));	
 }
 
 

@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
+#include "MayanTemple/MayanTempleCharacter.h"
 #include "PreciousRock.generated.h"
+
+class AAutel;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRockInteracted);
 
 UCLASS()
 class APreciousRock : public AActor
@@ -15,7 +18,8 @@ class APreciousRock : public AActor
 public:	
 	// Sets default values for this actor's properties
 	APreciousRock();
-
+	
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -32,7 +36,18 @@ private:
 	// Static mesh component
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UStaticMeshComponent* Rock;
-	// used for the Linetrace from Player
-	UPROPERTY(EditAnywhere, Category = "Collider")
-	UBoxComponent* CollisionBox;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gem")
+	TArray<FString> RockOptions;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gem")
+	int RockNameIndex;
+	FString RockName;
+	
+	UFUNCTION()
+	void TogglePhysics(bool isEnabled);
+
+	UPROPERTY(EditAnywhere, Category = "Components")
+	AAutel* autel;
 };
