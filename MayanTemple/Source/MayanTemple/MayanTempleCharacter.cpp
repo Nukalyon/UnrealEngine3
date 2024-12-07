@@ -12,6 +12,7 @@
 #include "InputActionValue.h"
 #include "PlayerWidget.h"
 #include "PreciousRock.h"
+#include "VaultLock.h"
 #include "Lever_panel.h"
 #include "Blueprint/UserWidget.h"
 #include "Engine/LocalPlayer.h"
@@ -70,7 +71,7 @@ void AMayanTempleCharacter::BeginPlay()
 void AMayanTempleCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if ((!isInspecting && !isHolding) || isAbleToPlaceItem)
+	if ((!isInspecting && !isHolding) || isAbleToPlaceRock || isAbleToUseKey)
 	{
 		FHitResult HitResult;
 		FVector Start = FirstPersonCameraComponent->GetComponentLocation();
@@ -87,43 +88,50 @@ void AMayanTempleCharacter::Tick(float DeltaSeconds)
 			ALever_panel* HitLever = Cast<ALever_panel>(HitResult.GetActor());
 			APreciousRock* HitRock = Cast<APreciousRock>(HitResult.GetActor());
 			AAutel* HitAutel = Cast<AAutel>(HitResult.GetActor());
+			AVaultKey* HitKey = Cast<AVaultKey>(HitResult.GetActor());
+			AVaultLock* HitLock = Cast<AVaultLock>(HitResult.GetActor());
 
-			if (HitLever && !isAbleToPlaceItem)
+			if (HitLever && !isAbleToPlaceRock)
 			{
 				//UE_LOG(LogTemp, Warning, TEXT("HitLever"));
-				isOverLever = true;
-				isOverRock = false;
 				PlayerWidget->setPromptF(false);
 				PlayerWidget->setPromptR(true);
 				CurrentInspectActor = HitLever;
 			}
-			else if (HitRock && !isAbleToPlaceItem)
+			else if (HitRock && !isAbleToPlaceRock)
 			{
 				//UE_LOG(LogTemp, Warning, TEXT("HitRock"));
-				isOverRock = true;
-				isOverLever = false;
 				PlayerWidget->togglePrompts(true);
 				CurrentInspectActor = HitRock;
 			}
-			else if(HitAutel && isAbleToPlaceItem)
+			else if(HitAutel && isAbleToPlaceRock)
 			{
 				//UE_LOG(LogTemp, Warning, TEXT("HitAutel"));
 				PlayerWidget->setPromptF(false);
 				PlayerWidget->setPromptR(true);
 				CurrentInspectActor = HitAutel;
 			}
+			else if(HitKey && !isAbleToPlaceRock)
+			{
+				//UE_LOG(LogTemp, Warning, TEXT("HitKey"));
+				PlayerWidget->setPromptF(false);
+				PlayerWidget->setPromptR(true);
+				CurrentInspectActor = HitKey;
+			}
+			else if(HitLock && isAbleToUseKey)
+			{
+				PlayerWidget->setPromptF(false);
+				PlayerWidget->setPromptR(true);
+				CurrentInspectActor = HitLock;
+			}
 			else
 			{
-				isOverRock = false;
-				isOverLever = false;
 				PlayerWidget->togglePrompts(false);
 				CurrentInspectActor = nullptr;
 			}
 		}
 		else
 		{
-			isOverRock = false;
-			isOverLever = false;
 			PlayerWidget->togglePrompts(false);
 			CurrentInspectActor = nullptr;
 		}
@@ -267,18 +275,30 @@ void AMayanTempleCharacter::EnterHoldActor(const FInputActionValue& InputActionV
 				temp->openDoors();
 			}
 		}
-		// Utilisation des pierres
-		else if(CurrentInspectActor->IsA<APreciousRock>())
+		// Utilisation qui fait changer le mapping
+		else 
 		{
 			isHolding = true;
-			isAbleToPlaceItem = true;
-			CurrentHoldActor = CurrentInspectActor;
-			
-			APreciousRock* rock = Cast<APreciousRock>(CurrentInspectActor);
-			rock->TogglePhysics(false);
-			HoldOrigin->SetRelativeRotation(FRotator::ZeroRotator);
-			CurrentInspectActor->AttachToComponent(HoldOrigin, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-
+			// Utilisation des pierres
+			if(CurrentInspectActor->IsA<APreciousRock>())
+			{
+				isAbleToPlaceRock = true;
+				CurrentHoldActor = CurrentInspectActor;			
+				APreciousRock* rock = Cast<APreciousRock>(CurrentInspectActor);
+				rock->TogglePhysics(false);
+				HoldOrigin->SetRelativeRotation(FRotator::ZeroRotator);
+				CurrentInspectActor->AttachToComponent(HoldOrigin, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			}
+			//Utilisation de la clef
+			else if(CurrentInspectActor->IsA<AVaultKey>())
+			{
+				isAbleToUseKey = true;
+				CurrentHoldActor = CurrentInspectActor;
+				AVaultKey* key = Cast<AVaultKey>(CurrentInspectActor);
+				key->TogglePhysics(false);
+				HoldOrigin->SetRelativeRotation(FRotator::ZeroRotator);
+				CurrentInspectActor->AttachToComponent(HoldOrigin, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			}			
 			
 			auto PlayerController = Cast<APlayerController>(GetController());
 			auto inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
@@ -286,6 +306,7 @@ void AMayanTempleCharacter::EnterHoldActor(const FInputActionValue& InputActionV
 			inputSubsystem->RemoveMappingContext(DefaultMappingContext);
 			inputSubsystem->AddMappingContext(HoldActorMappingContext, 0);
 		}
+		
 	}
 }
 
@@ -296,7 +317,7 @@ void AMayanTempleCharacter::ExitHoldActor(const FInputActionValue& InputActionVa
 		if(CurrentInspectActor->IsA<APreciousRock>())
 		{
 			isHolding = false;
-			isAbleToPlaceItem = false;
+			isAbleToPlaceRock = false;
 			APreciousRock* rock = Cast<APreciousRock>(CurrentInspectActor);
 			rock->TogglePhysics(true);
 			CurrentInspectActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
@@ -306,11 +327,20 @@ void AMayanTempleCharacter::ExitHoldActor(const FInputActionValue& InputActionVa
 		else if(CurrentInspectActor->IsA(AAutel::StaticClass()) && CurrentHoldActor->IsA<APreciousRock>())
 		{
 			isHolding = false;
-			isAbleToPlaceItem = false;
+			isAbleToPlaceRock = false;
 			// on détache le currentholdactor, on le fixe dans l'autel à sa position
 			AAutel* autel = Cast<AAutel>(CurrentInspectActor);
 			APreciousRock* rock = Cast<APreciousRock>(CurrentHoldActor);
 			autel->SnapThatRock(rock);
+			CurrentHoldActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+			CurrentHoldActor = nullptr;
+		}
+		else if(CurrentInspectActor->IsA(AVaultLock::StaticClass()) && CurrentHoldActor->IsA<AVaultKey>())
+		{
+			isHolding = false;
+			isAbleToUseKey = false;
+			AVaultKey* keyLock = Cast<AVaultKey>(CurrentInspectActor);
+			keyLock->UseKey();
 			CurrentHoldActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 			CurrentHoldActor = nullptr;
 		}

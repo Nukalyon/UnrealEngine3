@@ -24,6 +24,10 @@ AAutel::AAutel()
 	ObsidianPlace->SetupAttachment(Root);	
 	TurquoisePlace = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turquoise Space"));
 	TurquoisePlace->SetupAttachment(Root);
+	KeySocket = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Key Socket"));
+	KeySocket->SetRelativeLocation(FVector(-12,1,65));
+	KeySocket->SetRelativeRotation(FRotator(90,0,0));
+	KeySocket->SetupAttachment(Root);
 
 	NS_Rocks = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NS_Rocks"));
 	NS_Rocks->SetupAttachment(Root);
@@ -67,18 +71,22 @@ void AAutel::SnapThatRock(APreciousRock* rock)
 				case 0:
 					rock->AttachToComponent(GoldPlace, FAttachmentTransformRules::KeepWorldTransform);
 					rock->SetActorTransform(GoldPlace->GetComponentTransform());
+					NbRocksInAltar++;
 					break;
 				case 1:
 					rock->AttachToComponent(JadePlace, FAttachmentTransformRules::KeepWorldTransform);
 					rock->SetActorTransform(JadePlace->GetComponentTransform());
-						break;
+					NbRocksInAltar++;
+					break;
 				case 2:
 					rock->AttachToComponent(ObsidianPlace, FAttachmentTransformRules::KeepWorldTransform);
 					rock->SetActorTransform(ObsidianPlace->GetComponentTransform());
-						break;
+					NbRocksInAltar++;
+					break;
 				case 3:
 					rock->AttachToComponent(TurquoisePlace, FAttachmentTransformRules::KeepWorldTransform);
 					rock->SetActorTransform(TurquoisePlace->GetComponentTransform());
+					NbRocksInAltar++;
 					break;
 				default: ;
 			}
@@ -87,84 +95,34 @@ void AAutel::SnapThatRock(APreciousRock* rock)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Pierre non trouvée"));
 		}
+		
+		if(NbRocksInAltar == Rocks.Num())
+		{
+			DetachKey();
+		}
 	}
 	//ActivateNiagara(rock, true);
 	//Snap the rock to its socket
 }
 
-/*
- *#include "NiagaraComponent.h"
-#include "NiagaraSystem.h"
-#include "GameFramework/Actor.h"
-#include "Components/StaticMeshComponent.h"
-#include "Materials/MaterialInstanceDynamic.h"
-#include "Engine/World.h"
-#include "NiagaraFunctionLibrary.h"
-
-// Example Actor class where we will handle the color change
-class AMyActor : public AActor
+void AAutel::DetachKey()
 {
-    GENERATED_BODY()
-
-public:
-    AMyActor()
-    {
-        // Create the Niagara Component as a subobject
-        NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
-
-        // Find and assign the Niagara System
-        static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSystemAsset(TEXT("NiagaraSystem'/Game/Path/To/Your/NiagaraSystem.NiagaraSystem'"));
-        if (NiagaraSystemAsset.Succeeded())
-        {
-            NiagaraComponent->SetAsset(NiagaraSystemAsset.Object);
-        }
-
-        // Attach the Niagara Component to the actor's root
-        NiagaraComponent->SetupAttachment(RootComponent);
-
-        // Optionally activate it at start
-        NiagaraComponent->Activate();
-    }
-
-    // Method to change the color based on the rock picked up
-    void ChangeNiagaraColor(FLinearColor NewColor)
-    {
-        if (NiagaraComponent)
-        {
-            // Set the new color to the Niagara system (assuming "User.Color" is the color parameter in Niagara)
-            NiagaraComponent->SetVectorParameter("User.Color", NewColor);
-        }
-    }
-
-    // Example of handling rock pickup logic
-    void OnRockPickedUp(int32 RockType)
-    {
-        // Change the color based on the rock picked up
-        FLinearColor NewColor;
-
-        switch (RockType)
-        {
-        case 0:  // Rock Type 0
-            NewColor = FLinearColor::Red;  // Red for rock type 0
-            break;
-        case 1:  // Rock Type 1
-            NewColor = FLinearColor::Blue;  // Blue for rock type 1
-            break;
-        case 2:  // Rock Type 2
-            NewColor = FLinearColor::Green;  // Green for rock type 2
-            break;
-        default:
-            NewColor = FLinearColor::White;  // Default to white
-            break;
-        }
-
-        // Apply the new color to the Niagara system
-        ChangeNiagaraColor(NewColor);
-    }
-
-protected:
-    UPROPERTY(VisibleAnywhere, Category = "FX")
-    UNiagaraComponent* NiagaraComponent;
-};
-
- */
+	if(VaultKey)
+	{
+		KeySocket->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		FVector DropLocation = KeySocket->GetComponentLocation() - FVector(10, 10, 10); // Adjust as needed
+		KeySocket->SetWorldLocation(DropLocation);
+		VaultKey->TogglePhysics(true);
+	}
+	
+    /*
+	
+	KeySocket->SetSimulatePhysics(true);
+	KeySocket->SetEnableGravity(true);
+	KeySocket->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	*/
+    
+	// Log for debugging
+	UE_LOG(LogTemp, Warning, TEXT("Key has been detached from the altar."));
+	
+}

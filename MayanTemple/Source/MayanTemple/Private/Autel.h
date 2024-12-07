@@ -7,6 +7,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
 #include "PreciousRock.h"
+#include "VaultKey.h"
 #include "Autel.generated.h"
 
 UCLASS()
@@ -25,6 +26,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	// Static mesh component
+	UPROPERTY(EditAnywhere, Category = "Components")
+	UStaticMeshComponent* KeySocket;
 	
 private:	
 	UPROPERTY(EditAnywhere, Category = "Components")
@@ -53,9 +58,15 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Rocks")
 	TArray<APreciousRock*> Rocks;
 
+	UPROPERTY(EditAnywhere, Category = "References")
+	AVaultKey* VaultKey;
+
 public:
 	UFUNCTION()
 	void ActivateNiagara(APreciousRock* rock);
 	UFUNCTION()
 	void SnapThatRock(APreciousRock* rock);
+	UFUNCTION()
+    void DetachKey(); // New method to detach the key
+	int NbRocksInAltar = 0;
 };

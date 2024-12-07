@@ -13,7 +13,7 @@ APreciousRock::APreciousRock()
 
 	// Create the root component
 	//Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-	//RootComponent = Root; // Set the root component of the actor
+	//RootComponent = Root;
 
 	// Create the static mesh component
 	Rock = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Rock"));

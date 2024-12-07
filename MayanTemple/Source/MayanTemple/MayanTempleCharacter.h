@@ -129,9 +129,9 @@ private:
 
 	bool isInspecting = false;
 	bool isHolding = false;
-	bool isAbleToPlaceItem = false;
-	bool isOverLever = false;
-	bool isOverRock = false;
+	bool isAbleToPlaceRock = false;
+	bool isAbleToUseKey = false;
+	
 	AActor* CurrentInspectActor;
 	AActor* CurrentHoldActor;
 	FTransform InitialInspectTransform;
