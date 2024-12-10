@@ -17,7 +17,6 @@ APreciousRock::APreciousRock()
 
 	// Create the static mesh component
 	Rock = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Rock"));
-	TogglePhysics(true);
 	//Rock->SetupAttachment(Root);
 	RootComponent = Rock;
 
@@ -33,6 +32,7 @@ void APreciousRock::BeginPlay()
 {
 	Super::BeginPlay();
 	RockName = RockOptions[RockNameIndex];
+	TogglePhysics(true);
 }
 
 // Called every frame
@@ -47,4 +47,6 @@ void APreciousRock::TogglePhysics(bool isEnabled)
 	Rock->SetSimulatePhysics(isEnabled);
 	Rock->SetEnableGravity(isEnabled);
 	Rock->SetCollisionEnabled(isEnabled ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
+	Rock->SetCollisionResponseToAllChannels(ECR_Block); // Block all by default
+	Rock->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap); // Ignore player character (Pawn)
 }

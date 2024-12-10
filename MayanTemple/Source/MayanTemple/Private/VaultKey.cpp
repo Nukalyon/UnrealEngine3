@@ -26,7 +26,7 @@ void AVaultKey::BeginPlay()
 	if(autel)
 	{
 		Key->SetWorldScale3D(FVector(1.4f, 1.4f, 1.4f));
-		Key->AttachToComponent(autel->KeySocket,  FAttachmentTransformRules::SnapToTargetIncludingScale);
+		Key->AttachToComponent(autel->KeySocket,  FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	}
 	else
 	{
@@ -56,7 +56,7 @@ void AVaultKey::UseKey()
 	{
 		//Logic for the key to open the vaultDoor
 		UE_LOG(LogTemp, Warning, TEXT("Enter UseKey()"));
-		VaultLock->UnlockVaultDoor();		
+		VaultLock->UnlockVaultDoor();	
 	}
 }
 

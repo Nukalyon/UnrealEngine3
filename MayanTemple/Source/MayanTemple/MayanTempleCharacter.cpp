@@ -263,6 +263,9 @@ void AMayanTempleCharacter::RotateInspect(const FInputActionValue& InputActionVa
 
 void AMayanTempleCharacter::EnterHoldActor(const FInputActionValue& InputActionValue)
 {
+	//UE_LOG(LogTemp, Warning, TEXT("CurrentInspectActor: %s"), *GetNameSafe(CurrentInspectActor));
+	//UE_LOG(LogTemp, Warning, TEXT("CurrentHoldActor: %s"), *GetNameSafe(CurrentHoldActor));
+	
 	PlayerWidget->togglePrompts(false);
 	if(!isHolding && IsValid(CurrentInspectActor))
 	{
@@ -286,8 +289,6 @@ void AMayanTempleCharacter::EnterHoldActor(const FInputActionValue& InputActionV
 				CurrentHoldActor = CurrentInspectActor;			
 				APreciousRock* rock = Cast<APreciousRock>(CurrentInspectActor);
 				rock->TogglePhysics(false);
-				HoldOrigin->SetRelativeRotation(FRotator::ZeroRotator);
-				CurrentInspectActor->AttachToComponent(HoldOrigin, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 			}
 			//Utilisation de la clef
 			else if(CurrentInspectActor->IsA<AVaultKey>())
@@ -296,17 +297,17 @@ void AMayanTempleCharacter::EnterHoldActor(const FInputActionValue& InputActionV
 				CurrentHoldActor = CurrentInspectActor;
 				AVaultKey* key = Cast<AVaultKey>(CurrentInspectActor);
 				key->TogglePhysics(false);
-				HoldOrigin->SetRelativeRotation(FRotator::ZeroRotator);
-				CurrentInspectActor->AttachToComponent(HoldOrigin, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-			}			
+			}
+			
+			HoldOrigin->SetRelativeRotation(FRotator::ZeroRotator);
+			CurrentInspectActor->AttachToComponent(HoldOrigin, FAttachmentTransformRules::SnapToTargetIncludingScale);
 			
 			auto PlayerController = Cast<APlayerController>(GetController());
 			auto inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
 				PlayerController->GetLocalPlayer());
 			inputSubsystem->RemoveMappingContext(DefaultMappingContext);
 			inputSubsystem->AddMappingContext(HoldActorMappingContext, 0);
-		}
-		
+		}		
 	}
 }
 
@@ -314,38 +315,42 @@ void AMayanTempleCharacter::ExitHoldActor(const FInputActionValue& InputActionVa
 {
 	if(isHolding)
 	{
-		if(CurrentInspectActor->IsA<APreciousRock>())
-		{
-			isHolding = false;
-			isAbleToPlaceRock = false;
-			APreciousRock* rock = Cast<APreciousRock>(CurrentInspectActor);
-			rock->TogglePhysics(true);
-			CurrentInspectActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-			CurrentInspectActor = nullptr;
-			CurrentHoldActor = nullptr;
-		}
-		else if(CurrentInspectActor->IsA(AAutel::StaticClass()) && CurrentHoldActor->IsA<APreciousRock>())
-		{
-			isHolding = false;
-			isAbleToPlaceRock = false;
-			// on détache le currentholdactor, on le fixe dans l'autel à sa position
-			AAutel* autel = Cast<AAutel>(CurrentInspectActor);
-			APreciousRock* rock = Cast<APreciousRock>(CurrentHoldActor);
-			autel->SnapThatRock(rock);
-			CurrentHoldActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-			CurrentHoldActor = nullptr;
-		}
-		else if(CurrentInspectActor->IsA(AVaultLock::StaticClass()) && CurrentHoldActor->IsA<AVaultKey>())
-		{
-			isHolding = false;
-			isAbleToUseKey = false;
-			AVaultKey* keyLock = Cast<AVaultKey>(CurrentInspectActor);
-			keyLock->UseKey();
-			CurrentHoldActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-			CurrentHoldActor = nullptr;
-		}
-	}
+		//UE_LOG(LogTemp, Warning, TEXT("CurrentInspectActor: %s"), *GetNameSafe(CurrentInspectActor));
+		//UE_LOG(LogTemp, Warning, TEXT("CurrentHoldActor: %s"), *GetNameSafe(CurrentHoldActor));
 	
+		if(IsValid(CurrentInspectActor))
+		{
+			if(isAbleToPlaceRock && CurrentInspectActor->IsA<AActor>())
+			{
+				isAbleToPlaceRock = false;
+				// on détache le currentholdactor, on le fixe dans l'autel à sa position
+				AAutel* autel = Cast<AAutel>(CurrentInspectActor);
+				APreciousRock* rock = Cast<APreciousRock>(CurrentHoldActor);
+				autel->SnapThatRock(rock);
+			}
+			else if(isAbleToUseKey && CurrentInspectActor->IsA<AVaultLock>())
+			{
+				isAbleToUseKey = false;
+				Cast<AVaultKey>(CurrentInspectActor)->UseKey();
+			}
+		}
+		else
+		{
+			if(isAbleToPlaceRock)
+			{
+				isAbleToPlaceRock = false;
+				Cast<APreciousRock>(CurrentHoldActor)->TogglePhysics(true);
+			}
+			if(isAbleToUseKey)
+			{
+				isAbleToUseKey = false;
+				Cast<APreciousRock>(CurrentInspectActor)->TogglePhysics(true);
+			}
+		}
+		isHolding = false;
+		CurrentHoldActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		CurrentHoldActor = nullptr;
+	}
 
 	auto PlayerController = Cast<APlayerController>(GetController());
 	auto inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
