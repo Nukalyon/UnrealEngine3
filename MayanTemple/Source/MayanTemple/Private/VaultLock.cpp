@@ -31,9 +31,13 @@ void AVaultLock::Tick(float DeltaTime)
 
 void AVaultLock::UnlockVaultDoor()
 {
-	if(Door)
+	if(IsValid(VaultDoor))
 	{
-		Door->EnableMovment();
+		VaultDoor->EnableMovment();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Missing -- in VaultLock ref VaultDoor"));
 	}
 }
 

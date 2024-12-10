@@ -99,6 +99,7 @@ void AAutel::SnapThatRock(APreciousRock* rock)
 		if(NbRocksInAltar == Rocks.Num())
 		{
 			DetachKey();
+			StartStairs();
 		}
 	}
 	//ActivateNiagara(rock, true);
@@ -107,22 +108,27 @@ void AAutel::SnapThatRock(APreciousRock* rock)
 
 void AAutel::DetachKey()
 {
-	if(VaultKey)
+	if(IsValid(VaultKey))
 	{
 		KeySocket->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 		FVector DropLocation = KeySocket->GetComponentLocation() - FVector(10, 10, 10); // Adjust as needed
 		KeySocket->SetWorldLocation(DropLocation);
 		VaultKey->TogglePhysics(true);
 	}
-	
-    /*
-	
-	KeySocket->SetSimulatePhysics(true);
-	KeySocket->SetEnableGravity(true);
-	KeySocket->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	*/
     
 	// Log for debugging
-	UE_LOG(LogTemp, Warning, TEXT("Key has been detached from the altar."));
+	//UE_LOG(LogTemp, Warning, TEXT("Key has been detached from the altar."));
 	
+}
+
+void AAutel::StartStairs()
+{
+	if(IsValid(Stairs))
+	{
+		Stairs->Rise();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Missing -- in Autel ref Stairs"));
+	}
 }

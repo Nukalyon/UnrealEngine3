@@ -309,6 +309,8 @@ void AMayanTempleCharacter::EnterHoldActor(const FInputActionValue& InputActionV
 			inputSubsystem->AddMappingContext(HoldActorMappingContext, 0);
 		}		
 	}
+	UE_LOG(LogTemp, Warning, TEXT("CurrentInspectActor: %s"), *GetNameSafe(CurrentInspectActor));
+	UE_LOG(LogTemp, Warning, TEXT("CurrentHoldActor: %s"), *GetNameSafe(CurrentHoldActor));
 }
 
 void AMayanTempleCharacter::ExitHoldActor(const FInputActionValue& InputActionValue)
@@ -344,7 +346,7 @@ void AMayanTempleCharacter::ExitHoldActor(const FInputActionValue& InputActionVa
 			if(isAbleToUseKey)
 			{
 				isAbleToUseKey = false;
-				Cast<APreciousRock>(CurrentInspectActor)->TogglePhysics(true);
+				Cast<AVaultKey>(CurrentHoldActor)->TogglePhysics(true);
 			}
 		}
 		isHolding = false;

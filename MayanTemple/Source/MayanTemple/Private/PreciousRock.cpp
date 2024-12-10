@@ -3,8 +3,6 @@
 
 #include "PreciousRock.h"
 
-#include "Autel.h"
-
 // Sets default values
 APreciousRock::APreciousRock()
 {

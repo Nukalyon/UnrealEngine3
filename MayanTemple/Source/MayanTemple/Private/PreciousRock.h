@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MayanTemple/MayanTempleCharacter.h"
 #include "PreciousRock.generated.h"
 
 class AAutel;
@@ -47,7 +46,4 @@ public:
 	
 	UFUNCTION()
 	void TogglePhysics(bool isEnabled);
-
-	UPROPERTY(EditAnywhere, Category = "Components")
-	AAutel* autel;
 };

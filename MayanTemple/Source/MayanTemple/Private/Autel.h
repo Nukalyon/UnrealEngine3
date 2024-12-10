@@ -7,6 +7,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
 #include "PreciousRock.h"
+#include "Stairs.h"
 #include "VaultKey.h"
 #include "Autel.generated.h"
 
@@ -60,6 +61,8 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "References")
 	AVaultKey* VaultKey;
+	UPROPERTY(EditAnywhere, Category = "References")
+	AStairs* Stairs;
 
 public:
 	UFUNCTION()
@@ -68,5 +71,8 @@ public:
 	void SnapThatRock(APreciousRock* rock);
 	UFUNCTION()
     void DetachKey(); // New method to detach the key
+	UFUNCTION()
+	void StartStairs();
+	
 	int NbRocksInAltar = 0;
 };

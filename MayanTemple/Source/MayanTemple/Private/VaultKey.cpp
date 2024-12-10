@@ -12,10 +12,11 @@ AVaultKey::AVaultKey()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = Root;
+	//Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	//RootComponent = Root;
 	Key = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Key"));
-	Key->SetupAttachment(Root);
+	RootComponent = Key;
+	//Key->SetupAttachment(Root);
 	TogglePhysics(false);
 }
 
@@ -48,15 +49,21 @@ void AVaultKey::TogglePhysics(bool isEnabled)
 	Key->SetEnableGravity(isEnabled);
 	//Key->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.0f));
 	Key->SetCollisionEnabled(isEnabled ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
+	Key->SetCollisionResponseToAllChannels(ECR_Block); // Block all by default
+	Key->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap); // Ignore player character (Pawn)
 }
 
 void AVaultKey::UseKey()
 {
-	if(VaultLock)
+	if(IsValid(VaultLock))
 	{
 		//Logic for the key to open the vaultDoor
 		UE_LOG(LogTemp, Warning, TEXT("Enter UseKey()"));
 		VaultLock->UnlockVaultDoor();	
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Missing -- in VaultKey ref VaultLock"));
 	}
 }
 

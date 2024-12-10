@@ -1,49 +1,72 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Stairs.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/BoxComponent.h" // Include for UBoxComponents
 
 // Sets default values
 AStairs::AStairs()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
 
-	// Create the root component
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-	RootComponent = Root; // Set the root component of the actor
-	Stair01 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Stair01"));
-	Stair01->SetupAttachment(Root);
-	Stair02 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Stair02"));
-	Stair02->SetupAttachment(Root);
-	Stair03 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Stair03"));
-	Stair03->SetupAttachment(Root);
-	Stair04 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Stair04"));
-	Stair04->SetupAttachment(Root);
-	Stair05 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Stair05"));
-	Stair05->SetupAttachment(Root);
-	Stair06 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Stair06"));
-	Stair06->SetupAttachment(Root);
-	Stair07 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Stair07"));
-	Stair07->SetupAttachment(Root);
-	Stair08 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Stair08"));
-	Stair08->SetupAttachment(Root);
-	Stair09 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Stair09"));
-	Stair09->SetupAttachment(Root);
+    // Create the root component
+    Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+    RootComponent = Root; // Set the root component of the actor
+    
+    // Create stair components
+    for (int32 i = 1; i <= 9; ++i)
+    {
+        FString StairName = FString::Printf(TEXT("Stair%02d"), i);
+        UStaticMeshComponent* Stair = CreateDefaultSubobject<UStaticMeshComponent>(*StairName);
+        Stair->SetupAttachment(Root);
+        Stairs.Add(Stair); // Store the stair component in an array for easy access
+    }
 
+    CollisionBox = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CollisionBox"));
+    CollisionBox->SetupAttachment(Root);
+
+    // Initialize pop-up variables
+    PopProgress = 0.0f;
+    bIsPopping = false;
+    PopDuration = 1.0f; // Set the duration for the pop-up
 }
 
 // Called when the game starts or when spawned
 void AStairs::BeginPlay()
 {
-	Super::BeginPlay();
-	
+    Super::BeginPlay();
 }
 
 // Called every frame
 void AStairs::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+    Super::Tick(DeltaTime);
 
+    if (bIsPopping)
+    {
+        // Calculate the new position using Lerp
+        for (int32 i = 0; i < Stairs.Num(); ++i)
+        {
+            FVector NewLocation = FMath::Lerp(StartLocation + FVector(0, 0, -100 * (i + 1)), EndLocation + FVector(0, 0, 0), PopProgress);
+            Stairs[i]->SetWorldLocation(NewLocation);
+        }
+        CollisionBox->SetWorldLocation(FMath::Lerp(StartLocation + FVector(0, 0, -100), EndLocation + FVector(0, 0, 0), PopProgress));
+
+        // Update the progress
+        PopProgress += DeltaTime / PopDuration;
+
+        // Check if the pop is complete
+        if (PopProgress >= 1.0f)
+        {
+            bIsPopping = false; // Stop popping
+        }
+    }
 }
 
+void AStairs::Rise()
+{
+	// Set the starting and ending positions for the pop-up
+	StartLocation = GetActorLocation() - FVector(0, 0, 100); // Current location of the stairs
+	EndLocation = StartLocation + FVector(0, 0, 100); // Final position above ground
+
+	PopProgress = 0.0f; // Reset progress
+	bIsPopping = true; // Start popping
+}

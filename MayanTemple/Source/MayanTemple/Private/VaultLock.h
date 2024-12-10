@@ -35,5 +35,5 @@ private:
 	UStaticMeshComponent* KeyLock;
 	
 	UPROPERTY(EditAnywhere, Category = "References")
-	AVaultDoor* Door;
+	AVaultDoor* VaultDoor;
 };
