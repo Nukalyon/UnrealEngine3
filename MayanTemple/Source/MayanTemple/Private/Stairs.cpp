@@ -48,7 +48,7 @@ void AStairs::Tick(float DeltaTime)
             FVector NewLocation = FMath::Lerp(StartLocation + FVector(0, 0, -100 * (i + 1)), EndLocation + FVector(0, 0, 0), PopProgress);
             Stairs[i]->SetWorldLocation(NewLocation);
         }
-        CollisionBox->SetWorldLocation(FMath::Lerp(StartLocation + FVector(0, 0, -100), EndLocation + FVector(0, 0, 0), PopProgress));
+        //CollisionBox->SetWorldLocation(FMath::Lerp(StartLocation + FVector(0, 0, -100), EndLocation + FVector(0, 0, 0), PopProgress));
 
         // Update the progress
         PopProgress += DeltaTime / PopDuration;

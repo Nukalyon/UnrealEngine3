@@ -14,25 +14,49 @@ AVaultDoor::AVaultDoor()
 	RootComponent = Root; // Set the root component of the actor
 	VaultDoor = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Vault Door"));
 	VaultDoor->SetupAttachment(Root);
-
+	AngleDeg = 360.0f / 700.0f;
 }
 
 // Called when the game starts or when spawned
 void AVaultDoor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	BaseLocation = VaultDoor->GetComponentTransform().GetLocation();
 }
 
 // Called every frame
 void AVaultDoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if(bCanBeOpen)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("AVaultDoor EnableMovement "));
+		currentSlidingAmount += OpenSpeed * DeltaTime;
 
+		//UE_LOG(LogTemp, Error, TEXT("Amount : %f"), currentSlidingAmount);
+		if(currentSlidingAmount >= OpenDistance)
+		{
+			currentSlidingAmount = OpenDistance;
+			bCanBeOpen = false;
+		}
+		else
+		{
+			FTransform DoorTransform = VaultDoor->GetRelativeTransform();
+			FVector DoorLocation = DoorTransform.GetLocation();
+			FVector DoorRotation = DoorTransform.GetRotation().Euler();
+			
+			DoorLocation.X -= currentSlidingAmount;
+			
+			FRotator newRotator = FRotator(DoorRotation.Y + AngleDeg, 0, 0);
+			
+			VaultDoor->SetRelativeLocation(DoorLocation);
+			VaultDoor->SetRelativeRotation(newRotator);
+		}		
+	}
 }
 
-void AVaultDoor::EnableMovment()
+void AVaultDoor::EnableMovement()
 {
 	//Open the door
+	bCanBeOpen = true;
 }
-

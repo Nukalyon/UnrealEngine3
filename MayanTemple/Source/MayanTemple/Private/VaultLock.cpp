@@ -33,7 +33,7 @@ void AVaultLock::UnlockVaultDoor()
 {
 	if(IsValid(VaultDoor))
 	{
-		VaultDoor->EnableMovment();
+		VaultDoor->EnableMovement();
 	}
 	else
 	{

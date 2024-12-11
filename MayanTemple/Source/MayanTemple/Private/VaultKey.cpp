@@ -59,7 +59,7 @@ void AVaultKey::UseKey()
 	{
 		//Logic for the key to open the vaultDoor
 		UE_LOG(LogTemp, Warning, TEXT("Enter UseKey()"));
-		VaultLock->UnlockVaultDoor();	
+		VaultLock->UnlockVaultDoor();
 	}
 	else
 	{

@@ -22,7 +22,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	void EnableMovment();
+	void EnableMovement();
+	bool bCanBeOpen = false;
 
 private:
 	// Root component
@@ -31,4 +32,9 @@ private:
 	// Static mesh component
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UStaticMeshComponent* VaultDoor;
+	FVector BaseLocation;
+	float currentSlidingAmount = 0.0f;
+	float OpenDistance = 3.5f;
+	float OpenSpeed = 2.0f;
+	float AngleDeg;
 };

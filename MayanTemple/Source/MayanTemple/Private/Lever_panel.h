@@ -53,6 +53,6 @@ private:
 
 	bool startlifting = false;
 	bool isUsed = false;
-	int maxIncrement = 135;
+	int maxIncrement = 170;
 	int currentIncrement = 0;
 };

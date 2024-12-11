@@ -41,9 +41,9 @@ void ALever_panel::Tick(float DeltaTime)
 	if(startlifting && !isUsed)
 	{
 		FRotator currentLeverRotation = lever->GetRelativeRotation();
-		if(currentIncrement <= maxIncrement)
+		if(currentIncrement < maxIncrement)
 		{
-			currentLeverRotation.Yaw += 1;
+			currentLeverRotation.Pitch -= 1;
 			currentIncrement++;
 			lever->SetRelativeRotation(currentLeverRotation);
 		}
