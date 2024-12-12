@@ -40,12 +40,14 @@ void ALever_panel::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if(startlifting && !isUsed)
 	{
-		FRotator currentLeverRotation = lever->GetRelativeRotation();
+		//FRotator currentLeverRotation = lever->Rotat();
 		if(currentIncrement < maxIncrement)
 		{
-			currentLeverRotation.Pitch -= 1;
+			//currentLeverRotation.Pitch -= 1;
 			currentIncrement++;
-			lever->SetRelativeRotation(currentLeverRotation);
+			//UE_LOG(LogTemp, Warning, TEXT("Rotation = %s"), *lever->GetRelativeRotation().ToString());
+			lever->AddLocalRotation(FRotator(-1, 0, 0));
+			//lever->SetRelativeRotation(currentLeverRotation);
 		}
 		else
 		{

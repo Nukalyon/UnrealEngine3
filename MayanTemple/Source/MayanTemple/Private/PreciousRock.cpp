@@ -9,20 +9,14 @@ APreciousRock::APreciousRock()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Create the root component
-	//Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-	//RootComponent = Root;
-
 	// Create the static mesh component
 	Rock = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Rock"));
-	//Rock->SetupAttachment(Root);
 	RootComponent = Rock;
 
 	RockOptions.Add(TEXT("Gold"));
 	RockOptions.Add(TEXT("Jade"));
 	RockOptions.Add(TEXT("Obsidian"));
 	RockOptions.Add(TEXT("Turquoise"));
-
 }
 
 // Called when the game starts or when spawned

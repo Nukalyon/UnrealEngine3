@@ -14,8 +14,10 @@
 #include "PreciousRock.h"
 #include "VaultLock.h"
 #include "Lever_panel.h"
+#include "Idole.h"
 #include "Blueprint/UserWidget.h"
 #include "Engine/LocalPlayer.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 //DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -90,6 +92,7 @@ void AMayanTempleCharacter::Tick(float DeltaSeconds)
 			AAutel* HitAutel = Cast<AAutel>(HitResult.GetActor());
 			AVaultKey* HitKey = Cast<AVaultKey>(HitResult.GetActor());
 			AVaultLock* HitLock = Cast<AVaultLock>(HitResult.GetActor());
+			AIdole* HitIdole = Cast<AIdole>(HitResult.GetActor());
 
 			if (HitLever && !isAbleToPlaceRock)
 			{
@@ -121,6 +124,12 @@ void AMayanTempleCharacter::Tick(float DeltaSeconds)
 			else if(HitLock && isAbleToUseKey)
 			{
 				PlayerWidget->setPromptF(false);
+				PlayerWidget->setPromptR(true);
+				CurrentInspectActor = HitLock;
+			}
+			else if(HitIdole)
+			{
+				PlayerWidget->setPromptF(true);
 				PlayerWidget->setPromptR(true);
 				CurrentInspectActor = HitLock;
 			}
@@ -205,20 +214,27 @@ void AMayanTempleCharacter::EnterInspect(const FInputActionValue& InputActionVal
 		isInspecting = true;
 		PlayerWidget->togglePrompts(false);
 		// if the player is look at a rock
-		if(CurrentInspectActor->IsA<APreciousRock>()){
+		if(CurrentInspectActor->IsA<APreciousRock>())
+		{
 			//UE_LOG(LogTemp, Warning, TEXT("Object is APreciousRock"));
 			Cast<APreciousRock>(CurrentInspectActor)->TogglePhysics(false);
-			InspectOrigin->SetRelativeRotation(FRotator::ZeroRotator);
-			InitialInspectTransform = CurrentInspectActor->GetActorTransform();
-			CurrentInspectActor->AttachToComponent(InspectOrigin, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		}
+		else if(CurrentInspectActor->IsA<AIdole>())
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Object is APreciousRock"));
+			Cast<AIdole>(CurrentInspectActor)->TogglePhysics(false);
+		}
+		InspectOrigin->SetRelativeRotation(FRotator::ZeroRotator);
+		InitialInspectTransform = CurrentInspectActor->GetActorTransform();
+		CurrentInspectActor->AttachToComponent(InspectOrigin, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 
-			//Mapping changement
-			auto PlayerController = Cast<APlayerController>(GetController());
-			auto inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
-				PlayerController->GetLocalPlayer());
-			inputSubsystem->RemoveMappingContext(DefaultMappingContext);
-			inputSubsystem->AddMappingContext(InspectMappingContext, 0);
-		}		
+		//Mapping changement
+		auto PlayerController = Cast<APlayerController>(GetController());
+		auto inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
+			PlayerController->GetLocalPlayer());
+		inputSubsystem->RemoveMappingContext(DefaultMappingContext);
+		inputSubsystem->AddMappingContext(InspectMappingContext, 0);
+		
 	}
 }
 
@@ -227,7 +243,16 @@ void AMayanTempleCharacter::ExitInspect(const FInputActionValue& InputActionValu
 	if (isInspecting)
 	{
 		isInspecting = false;
-		Cast<APreciousRock>(CurrentInspectActor)->TogglePhysics(true);
+		if(CurrentInspectActor->IsA<APreciousRock>())
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Object is APreciousRock"));
+			Cast<APreciousRock>(CurrentInspectActor)->TogglePhysics(true);
+		}
+		else if(CurrentInspectActor->IsA<AIdole>())
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Object is APreciousRock"));
+			Cast<AIdole>(CurrentInspectActor)->TogglePhysics(true);
+		}
 		CurrentInspectActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 		CurrentInspectActor = nullptr;
 
@@ -278,6 +303,10 @@ void AMayanTempleCharacter::EnterHoldActor(const FInputActionValue& InputActionV
 				temp->openDoors();
 			}
 		}
+		else if(CurrentInspectActor->IsA<AIdole>())
+		{
+			Cast<AIdole>(CurrentInspectActor)->CollectIdole();
+		}
 		// Utilisation qui fait changer le mapping
 		else 
 		{
@@ -309,8 +338,8 @@ void AMayanTempleCharacter::EnterHoldActor(const FInputActionValue& InputActionV
 			inputSubsystem->AddMappingContext(HoldActorMappingContext, 0);
 		}		
 	}
-	UE_LOG(LogTemp, Warning, TEXT("CurrentInspectActor: %s"), *GetNameSafe(CurrentInspectActor));
-	UE_LOG(LogTemp, Warning, TEXT("CurrentHoldActor: %s"), *GetNameSafe(CurrentHoldActor));
+	//UE_LOG(LogTemp, Warning, TEXT("CurrentInspectActor: %s"), *GetNameSafe(CurrentInspectActor));
+	//UE_LOG(LogTemp, Warning, TEXT("CurrentHoldActor: %s"), *GetNameSafe(CurrentHoldActor));
 }
 
 void AMayanTempleCharacter::ExitHoldActor(const FInputActionValue& InputActionValue)
@@ -358,5 +387,5 @@ void AMayanTempleCharacter::ExitHoldActor(const FInputActionValue& InputActionVa
 	auto inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
 		PlayerController->GetLocalPlayer());
 	inputSubsystem->RemoveMappingContext(HoldActorMappingContext);
-	inputSubsystem->AddMappingContext(DefaultMappingContext, 0);	
+	inputSubsystem->AddMappingContext(DefaultMappingContext, 0);
 }

@@ -33,6 +33,9 @@ AStairs::AStairs()
 void AStairs::BeginPlay()
 {
     Super::BeginPlay();
+    StartLocation = GetActorLocation();
+    EndLocation = GetActorLocation().DownVector * 50;
+    SetActorLocation(EndLocation);
 }
 
 // Called every frame
@@ -45,7 +48,7 @@ void AStairs::Tick(float DeltaTime)
         // Calculate the new position using Lerp
         for (int32 i = 0; i < Stairs.Num(); ++i)
         {
-            FVector NewLocation = FMath::Lerp(StartLocation + FVector(0, 0, -100 * (i + 1)), EndLocation + FVector(0, 0, 0), PopProgress);
+            FVector NewLocation = FMath::Lerp(EndLocation + FVector(0, 0, -100 * (i + 1)), StartLocation, PopProgress);
             Stairs[i]->SetWorldLocation(NewLocation);
         }
         //CollisionBox->SetWorldLocation(FMath::Lerp(StartLocation + FVector(0, 0, -100), EndLocation + FVector(0, 0, 0), PopProgress));
@@ -63,10 +66,6 @@ void AStairs::Tick(float DeltaTime)
 
 void AStairs::Rise()
 {
-	// Set the starting and ending positions for the pop-up
-	StartLocation = GetActorLocation() - FVector(0, 0, 100); // Current location of the stairs
-	EndLocation = StartLocation + FVector(0, 0, 100); // Final position above ground
-
 	PopProgress = 0.0f; // Reset progress
 	bIsPopping = true; // Start popping
 }

@@ -22,5 +22,14 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void CollectIdole();
+	void TogglePhysics(bool bCond);
 
+private:
+	
+	// Static mesh component
+	UPROPERTY(EditAnywhere, Category = "Components")
+	UStaticMeshComponent* Idole;
+
+	bool bIsGoingUp = false;
 };

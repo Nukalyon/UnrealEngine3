@@ -34,7 +34,7 @@ private:
 	UStaticMeshComponent* VaultDoor;
 	FVector BaseLocation;
 	float currentSlidingAmount = 0.0f;
-	float OpenDistance = 3.5f;
+	float OpenDistance = 5.0f;
 	float OpenSpeed = 2.0f;
 	float AngleDeg;
 };

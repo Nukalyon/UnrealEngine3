@@ -28,10 +28,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	// Root component
-	UPROPERTY(EditAnywhere, Category = "Components")
-	USceneComponent* Root;
-
 	// Static mesh component
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UStaticMeshComponent* Rock;
